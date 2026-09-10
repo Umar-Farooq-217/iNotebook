@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req , res )=>{
-    obj ={
-        name : "Umar",
-        age : 23
-    }
-    res.json(obj);
+router.post('/', (req , res )=>{
+   console.log("req.body", req.body);
+   res.send('Hello World! from auth.js' )
 })
 module.exports = router;
