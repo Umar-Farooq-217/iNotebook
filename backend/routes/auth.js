@@ -4,6 +4,8 @@ const User = require('./../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const jt = process.env.JWT_SECRET;
+const fetchuser = require('../middleware/fetchuser');
+// Route : 1
 router.post('/createUser', async (req, res) => {
    try {
       const { name, email, password } = req.body;
@@ -13,7 +15,7 @@ router.post('/createUser', async (req, res) => {
       if (name.length < 3 || name.length > 20) {
          return res.status(400).send({ error: "Name should be between 3 to 20 characters" });
       }
-     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
          return res.status(400).send({ error: "Please enter a valid email address" });
       }
@@ -53,7 +55,7 @@ router.post('/createUser', async (req, res) => {
 
 })
 
-// Authencticate a user using , post "/api/auth/login" no login is required 
+//Route : 2  Authencticate a user using , post "/api/auth/login" no login is required 
 router.post('/login',async (req , res) => {
    try {
       const { email , password } = req.body;
@@ -88,6 +90,17 @@ router.post('/login',async (req , res) => {
       
    } catch (error) {
       console.log('The error in /login , ' , error);
+      res.status(500).send({ error : "internal server error"})
+   }
+})
+// Route : 3 Get loggedin user details "/api/auth/getuser" . Login Required
+router.post('/getuser',fetchuser, async(req , res)=>{
+   try {
+       userId = req.user.id ;
+      const user = await User.findById(userId).select("-password"); // .select("-password") means don't fetch password
+      res.send(user)
+   }catch (error) {
+      console.log('The error in /getUser , ' , error);
       res.status(500).send({ error : "internal server error"})
    }
 })
