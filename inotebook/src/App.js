@@ -16,6 +16,10 @@ function App() {
       <BrowserRouter>
         <div className="App">
           <Navbar />
+          <h1>Add Note</h1>
+          
+
+          <h1>Your Notes</h1>
           
 
           <Routes>
