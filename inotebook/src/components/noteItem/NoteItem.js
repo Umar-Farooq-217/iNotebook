@@ -5,7 +5,7 @@ import NotesContext from "../../context/notes/NotesContext";
 function NoteItem(props) {
     const context = useContext(NotesContext);
     const { deleteNote} = context;
-    const { note } = props;
+    const { note , updateNote } = props;
     return (
         <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <div className="card h-100">
@@ -18,7 +18,7 @@ function NoteItem(props) {
                         {props.note.description}
                     </p>
 
-                    <button className="btn btn-primary me-2">
+                    <button onClick={()=>{updateNote(note)}} className="btn btn-primary me-2">
                         Update
                     </button>
 
