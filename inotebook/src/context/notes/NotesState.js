@@ -32,17 +32,12 @@ const NotesState = (props) => {
             body: JSON.stringify({ title, description, tag })
         })
         // Logic to add in client side
-        const note = {
-            "_id": "6abb5497198094f38f9971c6",
-            "user": "6aaa3073ec14c4d49ffb7e36",
-            "title": title,
-            "description": description,
-            "tag": tag,
-            "date": "2026-09-29T06:03:03.071Z",
-            "__v": 0
-        };
+        const note = await response.json();
+
+        
         setNotes(notes.concat(note));
     };
+ 
 
     // Delete a note 
     const deleteNote =  async(id) => {

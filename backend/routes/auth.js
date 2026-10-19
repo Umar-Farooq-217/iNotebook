@@ -15,7 +15,7 @@ router.post('/createUser', async (req, res) => {
       if (name.length < 3 || name.length > 20) {
          return res.status(400).send({ error: "Name should be between 3 to 20 characters" });
       }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
          return res.status(400).send({ error: "Please enter a valid email address" });
       }
@@ -36,18 +36,18 @@ router.post('/createUser', async (req, res) => {
 
       console.log("req.body", req.body);
       const user = await User({
-         name : name,
-         email : email,
-         password : secPass
+         name: name,
+         email: email,
+         password: secPass
       });
       await user.save();
       const data = {
-         user : {
-            id : user.id
+         user: {
+            id: user.id
          }
       }
-      const authtoken = jwt.sign(data , jt);
-      res.json({authtoken})
+      const authtoken = jwt.sign(data, jt);
+      res.json({ authtoken })
    }
    catch (err) {
       console.log("The error is  ", err);
@@ -56,10 +56,11 @@ router.post('/createUser', async (req, res) => {
 })
 
 //Route : 2  Authencticate a user using , post "/api/auth/login" no login is required 
-router.post('/login',async (req , res) => {
+router.post('/login', async (req, res) => {
    try {
-      const { email , password } = req.body;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let success = false;
+      const { email, password } = req.body;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
          return res.status(400).send({ error: "Please enter a valid email address" });
       }
@@ -72,36 +73,39 @@ router.post('/login',async (req , res) => {
       // Check i the user already exists
       const existingUser = await User.findOne({ email: email });
       if (!existingUser) {
+         success = false;
          return res.status(400).send({ error: "Please try to login with correct credentials" });
       }
-      const passwordCompare = await bcrypt.compare(password , existingUser.password);
-      if(!passwordCompare){
-         return res.status(400).send({error : "Please try to login with corrct credentials"})
+      const passwordCompare = await bcrypt.compare(password, existingUser.password);
+      if (!passwordCompare) {
+         success = false;
+         return res.status(400).send({ error: "Please try to login with corrct credentials" })
       }
       const data = {
-         user : {
-            id : existingUser.id
+         user: {
+            id: existingUser.id
          }
       }
-      const authtoken = jwt.sign(data , jt);
-      res.json({authtoken});
+      const authtoken = jwt.sign(data, jt);
+      success = true;
+      res.json({success ,  authtoken });
 
 
-      
+
    } catch (error) {
-      console.log('The error in /login , ' , error);
-      res.status(500).send({ error : "internal server error"})
+      console.log('The error in /login , ', error);
+      res.status(500).send({ error: "internal server error" })
    }
 })
 // Route : 3 Get loggedin user details "/api/auth/getuser" . Login Required
-router.post('/getuser',fetchuser, async(req , res)=>{
+router.post('/getuser', fetchuser, async (req, res) => {
    try {
-       userId = req.user.id ;
+      userId = req.user.id;
       const user = await User.findById(userId).select("-password"); // .select("-password") means don't fetch password
       res.send(user)
-   }catch (error) {
-      console.log('The error in /getUser , ' , error);
-      res.status(500).send({ error : "internal server error"})
+   } catch (error) {
+      console.log('The error in /getUser , ', error);
+      res.status(500).send({ error: "internal server error" })
    }
 })
 

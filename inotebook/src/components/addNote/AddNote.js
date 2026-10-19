@@ -78,7 +78,7 @@ function AddNote() {
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary" >
+                <button disabled={note.title.length < 3 || note.description.length < 5 || note.tag.length < 3} type="submit" className="btn btn-primary" >
                     Add Note
                 </button>
             </form>
