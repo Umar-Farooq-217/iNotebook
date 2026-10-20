@@ -1,7 +1,8 @@
 import {useState} from 'react'
-
+import { useNavigate } from 'react-router-dom'
 function Login() {
      const host = "http://localhost:5000";
+     const navigate = useNavigate();
      const [credentials , setCredentials] = useState({email:"" , password:""});
     const handleSubmit = async(e) =>{
         e.preventDefault();
@@ -14,7 +15,12 @@ function Login() {
             body: JSON.stringify({ email: credentials.email, password: credentials.password })
         })
         const json =await  response.json()
-        console.log(json);
+       
+        if(json.success){
+          // save the auth token and redirect
+          localStorage.setItem('token' , json.authtoken);
+          navigate("/");
+        }
         
     }
     const onChange = (e)=>{
