@@ -8,6 +8,7 @@ const fetchuser = require('../middleware/fetchuser');
 // Route : 1
 router.post('/createUser', async (req, res) => {
    try {
+      let success = false;
       const { name, email, password } = req.body;
       if (!name || !email || !password) {
          return res.status(400).send({ error: "Please fill all the fields" });
@@ -47,11 +48,19 @@ router.post('/createUser', async (req, res) => {
          }
       }
       const authtoken = jwt.sign(data, jt);
-      res.json({ authtoken })
+res.json({
+  success: true,
+  authtoken: authtoken
+});
    }
    catch (err) {
-      console.log("The error is  ", err);
-   }
+  console.error("Signup error:", err);
+
+  return res.status(500).json({
+    success: false,
+    error: "Internal Server Error"
+  });
+}
 
 })
 

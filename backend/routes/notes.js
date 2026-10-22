@@ -51,7 +51,7 @@ router.put('/updatenote/:id', fetchuser, async (req, res) => {
             return res.status(401).send("Not Allowed");
         }
         // now update the note
-        note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
+        note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { returnDocument: 'after' });
         res.json({ note });
     } catch (error) {
         return res.status(500).send("Internal Server Error")
