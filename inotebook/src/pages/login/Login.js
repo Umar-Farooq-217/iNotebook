@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom'
 function Login() {
      const host = "http://localhost:5000";
@@ -7,20 +8,34 @@ function Login() {
     const handleSubmit = async(e) =>{
         e.preventDefault();
 
-         const response = await fetch(`${host}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: credentials.email, password: credentials.password })
-        })
-        const json =await  response.json()
-       
-        if(json.success){
-          // save the auth token and redirect
-          localStorage.setItem('token' , json.authtoken);
-          navigate("/");
-        }
+         try {
+    const response = await fetch(`${host}/api/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password
+      })
+    });
+
+    const json = await response.json();
+
+    if (response.ok && json.success) {
+      localStorage.setItem('token', json.authtoken);
+
+      toast.success("Login Successfully!");
+
+      navigate("/");
+    } else {
+      toast.error(json.error || "Invalid email or password!");
+    }
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    toast.error("Unable to connect to server!");
+  }
         
     }
     const onChange = (e)=>{

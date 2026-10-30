@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
@@ -6,11 +7,12 @@ function Signup() {
   const { name, email, password , cpassword } = credentials;
   const navigate = useNavigate();
 
-  const signUpHandler = async (e) => {
+  
+const signUpHandler = async (e) => {
   e.preventDefault();
 
   if (password !== cpassword) {
-    alert("Password and Confirm Password do not match");
+    toast.error("Your passwords do not match!");
     return;
   }
 
@@ -31,17 +33,29 @@ function Signup() {
     console.log("Status:", response.status);
     console.log("Backend response:", json);
 
-    if (json.success) {
+    if (response.ok && json.success) {
       localStorage.setItem('token', json.authtoken);
+
+      toast.success("Account created successfully!");
+
       navigate('/');
-    } else {
-      alert(json.error || json.message || "Signup failed");
+    }else if (json.error === "User already exists with this email") {
+
+  toast.error("Account already exists! Please login.");
+
+  navigate('/login');
+
+} else {
+      toast.error(json.error || json.message || "Signup failed!");
     }
+
   } catch (error) {
     console.error("Signup Error:", error);
-    alert("Backend connection failed. Check the console.");
+
+    toast.error("Backend connection failed!");
   }
 };
+
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
 

@@ -7,6 +7,7 @@ import About from './pages/about/About';
 import NotesState from './context/notes/NotesState';
 import Login from './pages/login/Login';
 import Signup from './pages/signup/Signup';
+import { Toaster } from 'react-hot-toast'
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
         <div className="App">
           <Navbar />
+          <Toaster position='top-center' />
 
           <Routes>
             <Route path="/" element={<Home />} />
