@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import NotesContext from '../../context/notes/NotesContext';
 import NoteItem from '../noteItem/NoteItem';
 import AddNote from '../addNote/AddNote';
-
+import { toast } from 'react-toastify';
 function Notes() {
     const context = useContext(NotesContext);
     const { notes, getNotes, editNote } = context;
@@ -40,7 +40,7 @@ function Notes() {
         e.preventDefault();
 
         if (!note.etitle.trim() || !note.edescription.trim()) {
-            alert("Title and description cannot be empty");
+           toast.error("Title and description cannot be empty!");
             return;
         }
 
