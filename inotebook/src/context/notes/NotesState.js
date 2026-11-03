@@ -57,7 +57,7 @@ const NotesState = (props) => {
 
     };
     // Edit a note 
-    const host = "http://localhost:5000";
+    const host = "https://i-notebook-gamma-liard.vercel.app/";
     const editNote = async (id, title, description, tag) => {
         const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
             method: 'PUT',
